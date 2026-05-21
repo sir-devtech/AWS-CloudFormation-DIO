@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Template CloudFormation - Criando uma Amazon EC2 simples.
+  Stack: EC2-Lab01
+
+Resources:
+  MinhaInstancia:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: us-east-1a
+      ImageId: ami-0ed9277fb7eb570c9
+      InstanceType: t2.micro
+      Tags:
+        - Key: Name
+          Value: EC2-Lab01
+
+Outputs:
+  InstanceId:
+    Description: ID da instancia EC2 criada
+    Value: !Ref MinhaInstancia
+  PublicIP:
+    Description: IP publico da instancia
+    Value: !GetAtt MinhaInstancia.PublicIp

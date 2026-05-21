@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Template CloudFormation - Criando uma Stack com Firewall usando Security Groups.
+  Stack: r-Firewall
+
+Resources:
+  FirewallSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Firewall - Permite apenas HTTP (80), bloqueia SSH
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: Permite acesso HTTP de qualquer origem
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: Permite todo trafego de saida
+      Tags:
+        - Key: Name
+          Value: SG-Firewall
+
+  FirewallInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: us-east-1a
+      ImageId: ami-0ed9277fb7eb570c9
+      InstanceType: t2.micro
+      SecurityGroups:
+        - !Ref FirewallSecurityGroup
+      Tags:
+        - Key: Name
+          Value: r-Firewall
+
+Outputs:
+  FirewallInstanceId:
+    Description: ID da instancia Firewall
+    Value: !Ref FirewallInstance
+  FirewallPublicIP:
+    Description: IP publico da instancia Firewall
+    Value: !GetAtt FirewallInstance.PublicIp
+  SecurityGroupId:
+    Description: ID do Security Group criado
+    Value: !Ref FirewallSecurityGroup

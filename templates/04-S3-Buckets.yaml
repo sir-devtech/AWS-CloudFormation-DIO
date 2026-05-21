@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Template CloudFormation - Criando buckets S3 para Backup e Logs
+  com politicas de ciclo de vida (Lifecycle) e controle de acesso privado.
+
+Resources:
+  S3BackupBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: Private
+      BucketName: meu-projeto-backups
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpirarBackupsAntigos
+            ExpirationInDays: 15
+            Status: Enabled
+
+  S3LogBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: Private
+      BucketName: meu-projeto-logs
+      LifecycleConfiguration:
+        Rules:
+          - Id: ExpirarLogsAntigos
+            ExpirationInDays: 30
+            Status: Enabled
+
+Outputs:
+  BackupBucketName:
+    Description: Nome do bucket de backups
+    Value: !Ref S3BackupBucket
+  LogBucketName:
+    Description: Nome do bucket de logs
+    Value: !Ref S3LogBucket
